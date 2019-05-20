@@ -18,11 +18,14 @@ addons:
       - python3-pip
 install: true
 before_install:
+  - docker-compose -v
   - which pip3    || echo 'which pip3 command failed.'
   - export PATH=$HOME/.local/bin:$PATH
   - pip3 install --user $(whoami) --upgrade pip # not pip3
   - which pip3    || echo 'which pip3 command failed.'
   - pip3 install --user $(whoami) --upgrade docker-compose httpie >/dev/null 2>&1
+  - http --version --debug
+  - docker-compose -v
 script:
   - echo TODO
 cache:
