@@ -1,12 +1,11 @@
-dist: xenial
-notifications:
-  email: false
+dist: trusty
 git:
   quiet: true
   depth: 1
+notifications:
+  email: false
 language: java
 jdk: openjdk8
-node_js: lts/*
 python: 3
 service:
   - docker
@@ -14,27 +13,18 @@ addons:
   apt:
     update: true
     packages:
+      - jq
       - bash
       - docker-ce
-      - python3-dev
       - python3-pip
-      - python3-six
-      - python3-setuptools
 install: true
 before_install:
   - docker-compose -v
-  - for pip in pip pip3 ; do
-      which $pip || echo "which $pip command failed." ;
-      $(which $pip) -V || echo "$(which $pip) -V command failed." ;
-    done
+  - which pip3    || echo 'which pip3 command failed.'
   - export PATH=$HOME/.local/bin:$PATH
-  - pip3 install --user $(whoami) --upgrade pip # pip3 -> pip
-  - for pip in pip pip3 ; do
-    which $pip || echo "which $pip command failed." ;
-    $(which $pip) -V || echo "$(which $pip) -V command failed." ;
-    done
- #- pip install --user $(whoami) --upgrade pip
-  - pip install --user $(whoami) --upgrade docker-compose httpie >/dev/null 2>&1
+  - pip3 install --user $(whoami) --upgrade pip # not pip3
+  - which pip3    || echo 'which pip3 command failed.'
+  - pip3 install --user $(whoami) --upgrade docker-compose httpie >/dev/null 2>&1
   - http --version --debug
   - docker-compose -v
 script:
