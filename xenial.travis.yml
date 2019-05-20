@@ -35,7 +35,7 @@ before_install:
     $(which $pip) -V || echo "$(which $pip) -V command failed." ;
     done
  #- pip install --user $(whoami) --upgrade pip
-  - pip install --user $(whoami) --upgrade docker-compose httpie >/dev/null 2>&1
+  - pip install --user $(whoami) --upgrade docker-compose httpie
   - http --version --debug
   - docker-compose -v
 script:
