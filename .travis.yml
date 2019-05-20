@@ -1,0 +1,52 @@
+dist: xenial
+notifications:
+  email: false
+git:
+  quiet: true
+  depth: 1
+language: java
+jdk: openjdk8
+node_js: lts/*
+python: 3
+service:
+  - docker
+addons:
+  apt:
+    update: true
+    packages:
+      - bash
+      - docker-ce
+      - python3-dev
+      - python3-pip
+      - python3-six
+      - python3-setuptools
+install: true
+before_install:
+  - docker-compose -v
+  - for pip in pip pip3 ; do
+      which $pip || echo "which $pip command failed." ;
+      $(which $pip) -V || echo "$(which $pip) -V command failed." ;
+    done
+  - export PATH=$HOME/.local/bin:$PATH
+  - pip3 install --user $(whoami) --upgrade pip # pip3 -> pip
+  - for pip in pip pip3 ; do
+    which $pip || echo "which $pip command failed." ;
+    $(which $pip) -V || echo "$(which $pip) -V command failed." ;
+    done
+ #- pip install --user $(whoami) --upgrade pip
+  - pip install --user $(whoami) --upgrade docker-compose httpie >/dev/null 2>&1
+  - http --version --debug
+  - docker-compose -v
+script:
+  - docker pull kennethreitz/httpbin
+  - docker run --rm --name httpbin -d -p 80:80 kennethreitz/httpbin
+  - http :80/get | jq '.'
+  - http :80/get
+after_script:
+ #- docker rm -f -v httpbin
+  - docker stop httpbin
+cache:
+  packages: true
+  pip: true
+  directories:
+    - ~/.docker
