@@ -1,53 +1,31 @@
-dist: xenial
-notifications:
-  email: false
+# please note that docker-compose isn't working on trusty with pip3 (trusty python3-six package is too old)
+dist: trusty
 git:
   quiet: true
   depth: 1
+notifications:
+  email: false
 language: java
 jdk: openjdk8
-node_js: lts/*
 python: 3
-service:
-  - docker
 addons:
   apt:
     update: true
     packages:
       - jq
       - bash
-      - docker-ce
-      - python3-dev
       - python3-pip
-      - python3-six
-      - python3-setuptools
 install: true
 before_install:
-  - docker-compose -v
-  - for pip in pip pip3 ; do
-      which $pip || echo "which $pip command failed." ;
-      $(which $pip) -V || echo "$(which $pip) -V command failed." ;
-    done
+  - which pip3    || echo 'which pip3 command failed.'
   - export PATH=$HOME/.local/bin:$PATH
-  - pip3 install --user $(whoami) --upgrade pip # pip3 -> pip
-  - for pip in pip pip3 ; do
-    which $pip || echo "which $pip command failed." ;
-    $(which $pip) -V || echo "$(which $pip) -V command failed." ;
-    done
- #- pip install --user $(whoami) --upgrade pip
-  - pip install --user $(whoami) --upgrade docker-compose httpie
+  - pip3 install --user $(whoami) --upgrade pip # not pip3
+  - which pip3    || echo 'which pip3 command failed.'
+  - pip3 install --user $(whoami) --upgrade httpie
   - http --version --debug
-  - docker-compose -v
 script:
-  - docker pull kennethreitz/httpbin
-  - docker run --rm --name httpbin -d -p 80:80 kennethreitz/httpbin
-  - http :80/get | jq '.'
-  - http :80/get
-after_script:
- #- docker rm -f -v httpbin
-  - docker stop httpbin
+  - http https://httpbin.org/get | jq '.'
+  - http https://httpbin.org/get
 cache:
   packages: true
   pip: true
-  directories:
-    - ~/.docker
