@@ -38,7 +38,15 @@ before_install:
   - http --version --debug
   - docker-compose -v
 script:
-  - echo TODO
+  - docker pull kennethreitz/httpbin
+  - docker run --rm --name httpbin -d -p 80:80 kennethreitz/httpbin
+  - http :80/get | jq '.'
+  - http :80/get
+after_script:
+ #- docker rm -f -v httpbin
+  - docker stop httpbin
 cache:
   packages: true
   pip: true
+  directories:
+    - ~/.docker
