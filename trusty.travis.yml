@@ -13,6 +13,7 @@ addons:
   apt:
     update: true
     packages:
+      - jq
       - bash
       - docker-ce
       - python3-pip
