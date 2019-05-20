@@ -37,3 +37,8 @@ before_install:
   - pip install --user $(whoami) --upgrade docker-compose httpie >/dev/null 2>&1
   - http --version --debug
   - docker-compose -v
+script:
+  - echo TODO
+cache:
+  packages: true
+  pip: true
